@@ -30,4 +30,7 @@ INSERT INTO not_manufact_product (size, id_product, type)
 DELETE FROM product USING product, (SELECT product.id_product as pr FROM product WHERE product.type = 'Холодильник') as r WHERE product.id_product = r.pr;
 COMMIT;
 
-
+# 2. Поместить (изменить какое-нибудь поле, например символом '!') сотрудников, которые связаны с помещениями, а эти помещения не связаны с цехами
+SELECT worker.name, territory.id_room, (worker.id_room) FROM worker left join territory on worker.id_room = territory.id_room where territory.id_room is null;
+UPDATE worker, (SELECT worker.id_passport as a FROM worker left join territory on worker.id_room = territory.id_room where territory.id_room is null) as q 
+		SET name = CONCAT('!', SUBSTR(name, 1)) WHERE worker.id_passport = q.a;
